@@ -1,4 +1,4 @@
-BITS 16
+BITS 16 
 ORG 0x7C00
 
 cli
@@ -42,10 +42,8 @@ load_kernel:
     mov dh, 0
     int 13h
 
-    ; Jump to kernel
     jmp 0x1000:0000
 
-; Print string routine
 print_string:
     mov ah, 0Eh
 .print_loop:
@@ -70,7 +68,6 @@ boot_menu_msg db 'Boot Menu:', 0Dh, 0Ah
 normal_boot_msg db 'Normal Boot Selected', 0Dh, 0Ah, 0
 recovery_mode_msg db 'Recovery Mode Selected', 0Dh, 0Ah, 0
 
-; Placeholder for boot mode
 boot_mode db 0
 
 TIMES 510-($-$$) DB 0

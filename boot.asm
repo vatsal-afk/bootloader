@@ -1,45 +1,77 @@
-bits 16  ; Set processor mode to 16-bit (real mode)
-org 0x7c00  ; Set origin point to 0x7C00 when BIOS loads your code
+BITS 16
+ORG 0x7C00
 
-boot:
-    mov ah, 0x02
-    mov al, 0x01 ; 1 sector count reading one sector
-    mov ch, 0x00
-    mov cl, 0x02
-    mov dh, 0x00
-    mov dl, 0x00
-    mov bx, 0x1000
-    mov es, bx
-    int 0x13
-    jc disk_error
-    mov ah, 0x0e
-    mov al, "$"
-    mov bh, 0
-    int 0x10
-    jmp 0x1000:0x00
+cli
+xor ax, ax
+mov ss, ax
+mov sp, 0x7C00
+sti
 
-disk_error:
-    mov ah, 0x0e
-    mov al, "!"
-    mov bh, 0
-    int 0x10
-    hlt
+boot_menu:
+    mov si, boot_menu_msg
+    call print_string
 
-mov si, 0  ; Initialize counter to print characters
+    call get_key
+    cmp al, '1'
+    je normal_boot
+    cmp al, '2'
+    je recovery_mode
+    jmp boot_menu  ; Invalid input, show menu again
 
-print:
-    mov ah, 0x0e  ; Function to print character in BIOS
-    mov al, [hello + si]  ; Load character from hello string
-    int 0x10  ; BIOS interrupt to print character
-    add si, 1  ; Move to the next character
-    cmp byte [hello + si], 0  ; Compare current character with null terminator
-    jne print  ; Jump back to print if not end of string
+normal_boot:
+    mov si, normal_boot_msg
+    call print_string
+    mov byte [boot_mode], 1
+    jmp load_kernel
 
-jmp $  ; Infinite loop (halt)
+recovery_mode:
+    mov si, recovery_mode_msg
+    call print_string
+    mov byte [boot_mode], 2
+    jmp load_kernel
 
-hello:
-    db "Hello, World!", 0  ; Null-terminated string
+load_kernel:
+    ; Assuming the kernel is loaded at 0x1000
+    mov ax, 0x1000
+    mov es, ax
+    xor bx, bx
+    mov ah, 02h
+    mov al, 3    ; Number of sectors to read
+    mov ch, 0
+    mov cl, 2    ; Starting at sector 2
+    mov dh, 0
+    int 13h
 
-times 510 - ($ - $$) db 0  ; Fill remaining space with zeros
-dw 0xAA55  ; Boot signature
+    ; Jump to kernel
+    jmp 0x1000:0000
 
+; Print string routine
+print_string:
+    mov ah, 0Eh
+.print_loop:
+    lodsb
+    cmp al, 0
+    je .done
+    int 10h
+    jmp .print_loop
+.done:
+    ret
+
+; Get key input routine
+get_key:
+    mov ah, 0
+    int 16h
+    ret
+
+boot_menu_msg db 'Boot Menu:', 0Dh, 0Ah
+               db '1. Normal Boot', 0Dh, 0Ah
+               db '2. Recovery Mode', 0Dh, 0Ah
+               db 'Select an option: ', 0
+normal_boot_msg db 'Normal Boot Selected', 0Dh, 0Ah, 0
+recovery_mode_msg db 'Recovery Mode Selected', 0Dh, 0Ah, 0
+
+; Placeholder for boot mode
+boot_mode db 0
+
+TIMES 510-($-$$) DB 0
+DW 0xAA55

@@ -1,10 +1,10 @@
 To run this project: 
-(if of Windows user needs to set up a Virtual Machine or use WSL)
+( Windows Users need to set up a Virtual Machine or use WSL )
 for debian based Linux users:
 
 just make sure that all the relative file structure remains intact
 
-execute the following commands on the terminal: (after navigating to the project dir)
+execute the following commands on the terminal: ( after navigating to the project dir )
 
 ```bash
 sudo apt update

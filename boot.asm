@@ -31,14 +31,13 @@ recovery_mode:
     jmp load_kernel
 
 load_kernel:
-    ; Assuming the kernel is loaded at 0x1000
     mov ax, 0x1000
     mov es, ax
     xor bx, bx
     mov ah, 02h
-    mov al, 3    ; Number of sectors to read
+    mov al, 3    
     mov ch, 0
-    mov cl, 2    ; Starting at sector 2
+    mov cl, 2    
     mov dh, 0
     int 13h
 

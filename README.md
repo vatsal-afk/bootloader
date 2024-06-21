@@ -29,7 +29,7 @@ The user is prompted with a boot menu with boot options :
 
 >fat12.asm contains header files for FAT 12 file system.
 
-Basic error handling functionality has been implemented.
+Basic error handling and debugging functionality has been implemented.
 
 The kernel implementation is basic and the kernel prints on the emulator the message alongwith the selected boot option.
 

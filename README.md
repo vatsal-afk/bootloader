@@ -34,9 +34,10 @@ Basic error handling and debugging functionality has been implemented.
 The kernel implementation is basic and the kernel prints on the emulator the message alongwith the selected boot option.
 
 Note: This is a 16-bit real mode implementation though modern compilers do not support it. Implementaion of protected mode is expected in future updates.
-Boot_mode stores the value correspinding to the selected boot_option.
+Boot_mode stores the value corresponding to the selected boot_option.
 
-This was the first time I was exposed to Assembly and these concepts of Operating Systems. Had fun implementing these features. Impatient to launch furthur updates.
+This was the first time I was exposed to Assembly and these concepts of Operating Systems, had fun implementing these features. Impatient to launch furthur updates.
+
 Resources used: 
 https://www.youtube.com/@nanobyte-dev
 https://www.youtube.com/@olivestemlearning
